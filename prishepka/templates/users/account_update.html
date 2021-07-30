@@ -1,0 +1,24 @@
+<!-- Шаблон редактирования личной информации пользователя -->
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Account{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-3 mt-2">
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <!-- Форма для имени и фамилии -->
+                {{ user|crispy }}
+                <!-- Форма для личной информации -->
+                {{ user_info|crispy}}
+
+                <input type="submit" class="btn btn-secondary mt-2" value="Отправить">
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

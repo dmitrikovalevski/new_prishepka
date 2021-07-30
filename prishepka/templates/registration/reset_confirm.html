@@ -1,0 +1,24 @@
+<!-- Шаблон для смены пароля -->
+<!DOCTYPE html>
+{% load static %}
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <title>Смена пароля</title>
+</head>
+<body>
+<center>
+  <br><br><br>
+  <h3>Введите новый пароль и подтвердите его.</h3>
+  <form method="POST">
+    {% csrf_token %}
+    <p><img src="{% static 'image/password.png' %}" height="30"> {{ form.new_password1 }}</p>
+    <p><img src="{% static 'image/password.png' %}" height="30"> {{ form.new_password2 }}</p>
+    <input class="btn btn-secondary" type="submit" value="Отправить">
+  </form>
+</center>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+</body>
+</html>

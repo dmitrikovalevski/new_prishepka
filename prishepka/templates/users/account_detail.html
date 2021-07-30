@@ -1,0 +1,64 @@
+<!-- Шаблон кабинета пользователя -->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Аккаунт {{ user.username }}{% endblock %}
+
+{% block content %}
+<div class="container">
+<h2>{{ user.username }}</h2>
+
+    <!-- Если есть аватар, тогда отобразить его -->
+    {% if user.userinfo.image %}
+    <img src="{{ user.userinfo.image.url }}" height="150"><br>
+    <!-- Если не установлен аватар, отобразить базовое изображение -->
+    {% else %}
+    <img src="{% static 'image/user1.png' %}" height="150"><br>
+    {% endif %}
+
+    <p>{{ user.first_name }} {{ user.last_name }}</p>
+
+    <!-- Если указан номер телефона, тогда отобразить его -->
+    {% if user.userinfo.phone %}
+    <p>{{ user.userinfo.phone }}</p>
+    {% endif %}
+
+    <p>{{ user.email }}</p>
+
+    <!-- Если в кабинет пользователя зашел владелец,
+    тогда отобразить ему кнопку редактирования личной информации -->
+    {% if owner %}
+    <p><a type="button" class="btn btn-secondary mt-2" href="{% url 'account_update' %}">Редактировать профиль</a></p>
+    {% endif %}
+</div>
+
+    <!-- Отображение услуг владельца кабинета пользователя -->
+    {% if owner %}
+<div class="container">
+
+    <!-- Циклом выведем все услуги пользователя по дате публикации -->
+    {% for service in owner_services %}
+    <div class="container mt-4">
+        <div class="d-flex position-relative mt-3">
+
+        <!-- Если есть картинка, тогда отобразить её -->
+          {% if service.picture %}
+          <img src="{{ service.picture.url }}" height="200" class="rounded mx-2">
+          {% endif %}
+
+          <div class="container border px-5">
+            <br>
+            <h5 class="mt-0">{{ service.title }}</h5>
+            <p>{{ service.descriptions }}</p>
+            <p>{{ service.price }}</p>
+            <p><img src="{% static 'image/eye.png' %}" height="22">{{ service.count }}</p>
+            <span class="container d-flex justify-content-end">
+                {{ service.date_created|date:'d.m.Y H:i:s'}}
+            </span>
+          </div>
+        </div>
+    </div>
+</div>
+    {% endfor %}
+    {% endif %}
+{% endblock %}

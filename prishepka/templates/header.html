@@ -1,0 +1,54 @@
+<!-- Шапка сайта -->
+{% load static %}
+<div class="container mt-3">
+  <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+
+    <!-- Логотип сайта -->
+    <a href="{% url 'home' %}"><img src="{% static 'image/ico.png' %}" height="42"></a>
+
+    <div class="nav col-8 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+
+    <!-- Если пользователь не не вошел в систему -->
+    {% if not request.user.is_authenticated %}
+      <a href="{% url 'home' %}" class="nav-link px-2 link-dark">Прищепка</a>
+      <a href="{% url 'add_user' %}" class="nav-link px-2 link-dark">Регистрация</a>
+      <a href="{% url 'login' %}" class="nav-link px-2 link-dark">Вход</a>
+
+    <!-- Если пользователь вошел в систему -->
+    {% else %}
+      <a href="{% url 'home' %}" class="nav-link px-4 mt-2 link-dark">Прищепка</a>
+      <a href="{% url 'add_service' %}" class="nav-link px-2 ml-7 link-dark"><img src="{% static 'image/plus.png' %}" height="42"></a></a>
+      <form action="{% url 'search' %}" method="GET" class="mt-3 mx-2">
+        <input name="user_search" placeholder="Поиск...">
+        <button type="submit" class="btn btn-secondary btn-sm">Найти</button>
+      </form>
+    {% endif %}
+    </div>
+
+    <!-- Если пользователь в системе -->
+    {% if request.user.is_authenticated %}
+    <div class="container mt-2 col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">
+      <h4><a class="nav-link px-2 link-dark" href="{% url 'account' request.user.id %}">Привет {{ request.user.username }}</a></h4>
+    </div>
+    {% endif %}
+
+    <!-- Если пользователь не вошел в систему тогда ничего не показывать -->
+    {% if not request.user.is_authenticated %}
+        <img src="" height="42">
+
+    <!-- Если пользователь вошел в систему и не имеет аватар, тогда показать базовую картинку -->
+    {% elif not request.user.userinfo.image %}
+       <a href="{% url 'account' request.user.id %}" class="d-block link-dark">
+         <img src="{% static 'image/user1.png' %}" height="42">
+       <a href="{% url 'logout' %}" class="nav-link px-4 link-dark">Выход</a>
+
+    <!-- Если пользователь вошел в систему отобразить его аватар -->
+    {% else %}
+       <a href="{% url 'account' request.user.id %}" class="d-block link-dark">
+         <img src="{{ request.user.userinfo.image.url }}" height="42"></a>
+       <a href="{% url 'logout' %}" class="nav-link px-4 link-dark">Выход</a>
+    {% endif %}
+
+  </div>
+</div>
+<hr>

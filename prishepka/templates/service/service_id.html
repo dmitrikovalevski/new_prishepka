@@ -1,0 +1,76 @@
+<!-- Шаблон для отображения информации сервиса -->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ service.title }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex position-relative mt-3">
+
+    <!-- Если есть картинка, тогда отобразить её -->
+      {% if service.picture %}
+      <img src="{{ service.picture.url }}" height="200" class="rounded">
+      {% endif %}
+      <div class="container border px-5">
+        <br>
+        <h5 class="mt-0">{{ service.title }}</h5>
+        <p>{{ service.descriptions }}</p>
+        <p>{{ service.price }}</p>
+        <p><a href="{% url 'account' service.user.pk %}">{{ service.user }}</a></p>
+          <span class="container d-flex justify-content-end">
+              {{ service.date_created|date:'d.m.Y H:i:s'}}
+          </span>
+      </div>
+    </div>
+</div>
+
+<!-- Если на страницу услуги зашел владелец этой услуги,
+     тогда отобразить ему кнопки для редактирования и удаления услуги-->
+{% if owner %}
+<div class="container mt-3">
+    <a href="{% url 'update' service.pk %}" class="btn btn-secondary">Редактировать</a>
+    <a href="{% url 'delete' service.pk %}" class="btn btn-secondary">Удалить</a>
+</div>
+{% endif %}
+
+<!-- Контейнер отображения комментариев услуги -->
+<div class="container mt-3">
+
+    <!-- Отображение всех комментариев циклом -->
+    {% for comm in service.comments_set.all %}
+    <div class="container bt-3 border">
+
+        <!-- Отображение аватарки пользователя -->
+        {% if comm.user.userinfo.image %}
+        <img src="{{ comm.user.userinfo.image.url }}" height="25">
+        <!-- Если аватарка не установленна, отобразить базовое изображение -->
+        {% else %}
+        <img src="{% static 'image/user1.png' %}" height="25">
+        {% endif %}
+
+        <a href="{% url 'account' comm.user.pk %}">{{ comm.user }}</a>
+        <p class="mt-2">{{ comm.comment }}</p>
+        <p class="d-flex justify-content-end">{{ comm.date_created|date:'d.m.Y H:i:s' }}</p>
+    </div>
+    {% endfor %}
+    <br>
+</div>
+
+<!-- Если пользователь вошел в всистему он сможет оставить комментарий -->
+{% if perm_for_comment %}
+
+<!-- Форма для комментария -->
+<div class="container mt-3">
+    <div class="row">
+        <div class="col-md-4 mt-2">
+            <form method="POST">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <input type="submit" class="btn btn-secondary" value="Добавить комментарий">
+            </form>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

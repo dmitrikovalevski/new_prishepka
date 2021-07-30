@@ -1,0 +1,18 @@
+<!-- Шаблон для входа пользователя в систему -->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}LogIn{% endblock %}
+
+{% block content %}
+<center>
+    <p><h2>Вход</h2></p>
+    <form method="post">
+        {% csrf_token %}
+        <p><img src="{% static 'image/user.png' %}" height="30"> {{ form.username }}</p>
+        <p><img src="{% static 'image/password.png' %}" height="30"> {{ form.password }}</p>
+        <input class="btn btn-secondary" type="submit"  value="Войти">
+        <a type="button" class="btn btn-secondary" href="{% url 'forgot' %}">Забыл пароль</a>
+    </form>
+</center>
+{% endblock %}

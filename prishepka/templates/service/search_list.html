@@ -1,0 +1,27 @@
+<!-- Шаблон для отображения поиска -->
+{% extends 'base.html' %}
+
+{% block title %}Результаты поиска{% endblock %}
+
+{% block content %}
+{% for service in list_result %}
+<div class="container mt-4">
+    <div class="d-flex position-relative mt-3">
+    <!-- Если есть картинка, тогда отобразить -->
+      {% if service.picture %}
+      <img src="{{ service.picture.url }}" height="200" class="rounded">
+      {% endif %}
+      <div class="container border px-5">
+        <br>
+        <h5 class="mt-0">{{ service.title }}</h5>
+        <p>{{ service.descriptions }}</p>
+        <p>{{ service.price }}</p>
+        <a href="{% url 'detail' service.pk %}" class="stretched-link">Подробнее</a>
+          <span class="container d-flex justify-content-end">
+              {{ service.date_created|date:'d.m.Y H:i:s'}}
+          </span>
+      </div>
+    </div>
+</div>
+{% endfor %}
+{% endblock %}
