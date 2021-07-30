@@ -79,10 +79,21 @@ WSGI_APPLICATION = 'prishepka.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
+#DATABASES = {
+#    'default': {
+#        'ENGINE': 'django.db.backends.sqlite3',
+#        'NAME': BASE_DIR / 'db.sqlite3',
+#    }
+#}
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'prishepka_test',
+        'USER': 'test_owner',
+        'PASSWORD': 'password',
+        'HOST': 'localhost',
+        'PORT': '',
     }
 }
 
@@ -130,8 +141,9 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # static files
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-    BASE_DIR.joinpath('static'),
+    os.path.join(BASE_DIR, 'static')
 ]
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # User
 LOGIN_REDIRECT_URL = 'home'
