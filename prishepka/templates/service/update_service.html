@@ -1,6 +1,6 @@
 <!-- Шаблон редактирования услуги -->
 {% extends 'base.html' %}
-{% load crispy_forms_tags %}
+
 {% block title %}Редактировать{% endblock %}
 
 {% block content %}
@@ -10,7 +10,7 @@
         <div class="col-md-4 mt-2">
             <form method="post" enctype="multipart/form-data">
                 {% csrf_token %}
-                {{ form|crispy }}
+                {{ form.as_p }}
                 <input type="submit" class="btn btn-secondary mt-2" value="Обновить">
             </form>
         </div>

@@ -1,6 +1,5 @@
 <!-- Шаблон для добавления услуги пользователем -->
 {% extends 'base.html' %}
-{% load crispy_forms_tags %}
 
 {% block title %}Добавить объявление{% endblock %}
 
@@ -11,7 +10,7 @@
             <h2>Добавить объявление</h2>
             <form method="post" enctype="multipart/form-data">
                 {% csrf_token %}
-                {{ form|crispy }}
+                {{ form.as_p }}
                 <input class="btn btn-secondary mt-2" type="submit" value="Отправить">
             </form>
         </div>

@@ -1,6 +1,5 @@
 <!-- Шаблон редактирования личной информации пользователя -->
 {% extends 'base.html' %}
-{% load crispy_forms_tags %}
 
 {% block title %}Account{% endblock %}
 
@@ -12,9 +11,9 @@
                 {% csrf_token %}
 
                 <!-- Форма для имени и фамилии -->
-                {{ user|crispy }}
+                {{ user.as_p }}
                 <!-- Форма для личной информации -->
-                {{ user_info|crispy}}
+                {{ user_info.as_p }}
 
                 <input type="submit" class="btn btn-secondary mt-2" value="Отправить">
             </form>

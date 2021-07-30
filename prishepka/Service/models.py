@@ -27,4 +27,4 @@ class Comment(models.Model):
     service = models.ForeignKey(Service, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
-        return self.comment
+        return self.body
