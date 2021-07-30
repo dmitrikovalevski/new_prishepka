@@ -1,3 +1,8 @@
+# Инструмент Django для работы с админкой
 from django.contrib import admin
 
-# Register your models here.
+# Модель для админки
+from .models import UserInfo
+
+# Добавим в админку модель
+admin.site.register(UserInfo)
