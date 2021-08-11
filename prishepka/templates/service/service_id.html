@@ -35,42 +35,57 @@
 {% endif %}
 
 <!-- Контейнер отображения комментариев услуги -->
+
 <div class="container mt-3">
 
     <!-- Отображение всех комментариев циклом -->
     {% for comm in service.comment_set.all %}
-    <div class="container bt-3 border">
+    <div class="container bt-3 border" id="block-comment">
 
         <!-- Отображение аватарки пользователя -->
         {% if comm.user.userinfo.image %}
-        <img src="{{ comm.user.userinfo.image.url }}" height="25">
+        <img src="{{ comm.user.userinfo.image.url }}" height="25" id="image-comment">
         <!-- Если аватарка не установленна, отобразить базовое изображение -->
         {% else %}
         <img src="{% static 'image/user1.png' %}" height="25">
         {% endif %}
 
-        <a href="{% url 'account' comm.user.pk %}">{{ comm.user }}</a>
-        <p class="mt-2">{{ comm.body }}</p>
-        <p class="d-flex justify-content-end">{{ comm.date_created|date:'d.m.Y H:i:s' }}</p>
+        <a href="{% url 'account' comm.user.pk %}" id="user-link-comment">{{ comm.user }}</a>
+        <p class="mt-2" id="body-comment">{{ comm.body }}</p>
+        <p class="d-flex justify-content-end" id="date-created-comment">{{ comm.date_created|date:'d.m.Y H:i:s' }}</p>
     </div>
     {% endfor %}
+    <div id="new-block-comment"></div>
     <br>
 </div>
 
+
+
 <!-- Если пользователь вошел в всистему он сможет оставить комментарий -->
-{% if perm_for_comment %}
 
 <!-- Форма для комментария -->
 <div class="container mt-3">
     <div class="row">
-        <div class="col-md-4 mt-2">
-            <form method="POST">
-                {% csrf_token %}
-                {{ form.as_p }}
-                <input type="submit" class="btn btn-secondary" value="Добавить комментарий">
-            </form>
-        </div>
+    <div class="col-md-4 mt-2">
+    <form method="POST" id="comment-form" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input id="submit-form" type="submit" class="btn btn-secondary" data-ajax-target="{% url 'detail' service.pk %}" value="Добавить комментарий">
+    </form>
+    </div>
     </div>
 </div>
-{% endif %}
+
+<!--
+
+<div class="container">
+    <form method="GET" id="test-form">
+        {% csrf_token %}
+        <input id="test-button" value="click me" type="button" data-ajax-target="{% url 'detail' service.pk %}" onclick="getSomeone()">
+    </form>
+</div>
+
+-->
+
+<script src="{% static 'js/dinamic_comment.js' %}"></script>
 {% endblock %}

@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-vf5=#9)jssbih#208)9=i8s074#dswezrv6b-%^4z5@s(hm5=t
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.1.89']
+ALLOWED_HOSTS = ['192.168.1.89', '127.0.0.1']
 
 
 # Application definition
@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'corsheaders',
     # apps
     'User.apps.UserConfig',
     'Service.apps.ServiceConfig'
@@ -51,7 +53,12 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
 ]
+
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_URL_REGEX = r'^/api/.*$'
 
 ROOT_URLCONF = 'prishepka.urls'
 

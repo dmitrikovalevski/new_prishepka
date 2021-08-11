@@ -1,5 +1,14 @@
 # Модели
-from .models import Service
+from django.shortcuts import render
+from django.http import HttpResponse
+import json
+
+# for serialize
+from django.http import JsonResponse
+from .serializers import CommentSerializer
+
+import User.models
+from .models import Service, Comment
 
 # Формы
 from .forms import CommentForm
@@ -16,6 +25,9 @@ from django.views.generic import (
     UpdateView,
     DeleteView,
 )
+
+# работа с JSON
+from django.http import JsonResponse
 
 
 # Класс вида главной страницы
@@ -55,6 +67,26 @@ class ServiceDetailView(DetailView, CreateView):
     template_name = 'service/service_id.html'
     form_class = CommentForm
 
+    def post(self, request, *args, **kwargs):
+        if request.is_ajax():
+            body = request.POST.get('the_comment')
+            data = {}
+
+            comment = Comment(
+                body=body,
+                user=request.user,
+                service=Service.objects.get(pk=self.kwargs['pk']),
+            )
+            comment.save()
+
+            data['body'] = comment.body
+            data['date_created'] = str(comment.date_created.strftime('%d.%m.%y %H:%M:%S'))
+            data['user'] = str(comment.user)
+
+            return HttpResponse(json.dumps(data), content_type='application/json')
+        else:
+            return HttpResponse(json.dumps({'error': 'error'}), content_type='application/json')
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
@@ -76,6 +108,11 @@ class ServiceDetailView(DetailView, CreateView):
         # Получим переменную для доступа к редактированию и удалению услуги.
         # Доступ к этим действиям получит только владелец услуги.
         context['owner'] = self.request.user == service_user
+
+        current_service = Service.objects.get(pk=self.kwargs['pk'])
+        # if we have a comment
+        context['have_comment'] = current_service.comment_set.order_by('-date_created')
+
         return context
 
     # Сохранение формы комментария
@@ -147,3 +184,22 @@ class ServiceDeleteView(DeleteView):
     # После подтверждения удаления вернёт на главную страницу
     def get_success_url(self):
         return reverse('home')
+
+
+# def comment_issue(request):
+#    body = request.POST.get('body')
+#    comment = Comment.objects.filter(body=body)
+#    data = {
+#        'comment': comment
+#    }
+#    return JsonResponse(data)
+
+
+
+
+
+def api_rubric(request):
+    if request.method == "GET":
+        comments = Comment.objects.all()
+        serializer = CommentSerializer(comments, many=True)
+        return JsonResponse(serializer.data, dafe=False)

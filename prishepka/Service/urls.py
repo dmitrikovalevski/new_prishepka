@@ -9,6 +9,7 @@ from .views import (
     ServiceUpdateView,
     ServiceDeleteView,
     SearchView,
+
 )
 
 urlpatterns = [
@@ -18,4 +19,5 @@ urlpatterns = [
     path('detail/<int:pk>/delete/', ServiceDeleteView.as_view(), name='delete'),
     path('add_service/', ServiceCreateView.as_view(), name='add_service'),
     path('search_result/', SearchView.as_view(), name='search'),
+
 ]
