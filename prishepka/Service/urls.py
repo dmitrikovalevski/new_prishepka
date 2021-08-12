@@ -9,7 +9,7 @@ from .views import (
     ServiceUpdateView,
     ServiceDeleteView,
     SearchView,
-
+    api_comment,
 )
 
 urlpatterns = [
@@ -19,5 +19,5 @@ urlpatterns = [
     path('detail/<int:pk>/delete/', ServiceDeleteView.as_view(), name='delete'),
     path('add_service/', ServiceCreateView.as_view(), name='add_service'),
     path('search_result/', SearchView.as_view(), name='search'),
-
+    path('api_comment/', api_comment, name='api_comment'),
 ]

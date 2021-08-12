@@ -59,10 +59,8 @@
     <br>
 </div>
 
-
-
 <!-- Если пользователь вошел в всистему он сможет оставить комментарий -->
-
+{% if perm_for_comment %}
 <!-- Форма для комментария -->
 <div class="container mt-3">
     <div class="row">
@@ -75,17 +73,7 @@
     </div>
     </div>
 </div>
-
-<!--
-
-<div class="container">
-    <form method="GET" id="test-form">
-        {% csrf_token %}
-        <input id="test-button" value="click me" type="button" data-ajax-target="{% url 'detail' service.pk %}" onclick="getSomeone()">
-    </form>
-</div>
-
--->
+{% endif %}
 
 <script src="{% static 'js/dinamic_comment.js' %}"></script>
 {% endblock %}

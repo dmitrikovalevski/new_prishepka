@@ -19,7 +19,9 @@ from .models import UserInfo
 @receiver(post_save, sender=User)
 def create_userinfo(instance, created, **kwargs):
     if created:
-        UserInfo.objects.create(user=instance)
+        UserInfo.objects.create(
+            user=instance
+        )
 
 
 # Сигнал, который при создании модели пользователя

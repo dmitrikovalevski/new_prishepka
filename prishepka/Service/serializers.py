@@ -5,4 +5,4 @@ from .models import Comment
 class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
-        fields = ['__all__']
+        fields = ['body', 'date_created', 'user', 'service']

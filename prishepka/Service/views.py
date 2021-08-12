@@ -4,6 +4,8 @@ from django.http import HttpResponse
 import json
 
 # for serialize
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
 from django.http import JsonResponse
 from .serializers import CommentSerializer
 
@@ -25,9 +27,6 @@ from django.views.generic import (
     UpdateView,
     DeleteView,
 )
-
-# работа с JSON
-from django.http import JsonResponse
 
 
 # Класс вида главной страницы
@@ -79,9 +78,14 @@ class ServiceDetailView(DetailView, CreateView):
             )
             comment.save()
 
+            data['user_pk'] = str(comment.user.pk)
             data['body'] = comment.body
-            data['date_created'] = str(comment.date_created.strftime('%d.%m.%y %H:%M:%S'))
+            data['date_created'] = str(comment.date_created.strftime('%d.%m.%Y %H:%M:%S'))
             data['user'] = str(comment.user)
+            if comment.user.userinfo.image:
+                data['image'] = comment.user.userinfo.image.url
+            else:
+                data['image'] = ''
 
             return HttpResponse(json.dumps(data), content_type='application/json')
         else:
@@ -120,7 +124,7 @@ class ServiceDetailView(DetailView, CreateView):
         comment = form.save()
 
         # Проверка на регистрацию пользователя
-        if self.request.user.is_authenticated:
+        if self.request.user.is_authenticated and self.request.is_ajax():
             # Привязка комментария к пользователю
             comment.user = self.request.user
 
@@ -186,20 +190,9 @@ class ServiceDeleteView(DeleteView):
         return reverse('home')
 
 
-# def comment_issue(request):
-#    body = request.POST.get('body')
-#    comment = Comment.objects.filter(body=body)
-#    data = {
-#        'comment': comment
-#    }
-#    return JsonResponse(data)
-
-
-
-
-
-def api_rubric(request):
+@api_view(['GET'])
+def api_comment(request):
     if request.method == "GET":
         comments = Comment.objects.all()
         serializer = CommentSerializer(comments, many=True)
-        return JsonResponse(serializer.data, dafe=False)
+        return Response(serializer.data)

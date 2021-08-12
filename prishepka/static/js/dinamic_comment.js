@@ -3,9 +3,9 @@
 
 $("#comment-form").on('submit', function(event) {
 	event.preventDefault();
-	console.log('form submitted')
 	create_comment();
 });
+
 
 
 function create_comment() {
@@ -22,14 +22,24 @@ function create_comment() {
 			 },
 
 		success: function(json) {
+			let check;
+
+			if (json['image'] == '') {
+				check = '/static/image/user1.png';
+			} else {
+				check = json['image'];
+			};
+
 			$("#id_body").val('');
-			console.log(json);
-			console.log('success');
+			$("#new-block-comment").append("<div class='container bt-3 border' id='block-comment'>" +
+	        "<img src='" + check + "' height='25' id='image-comment'>" +
+	        "<a href='/user/account/" + json['user_pk'] + "'>" + json['user'] + "</a>" +
+	        "<p class='mt-2' id='body-comment'>" + json['body'] + "</p>" +
+	        "<p class='d-flex justify-content-end' id='date-created-comment'>" + json['date_created'] + "</p></div>");
 		},
 
 		error: function(xhr, errormsg, err) {
 			$("#new-block-comment").html("<div class='container bt-3 border' id='block-comment'>" + errormsg + "</div>");
-			console.log(xhr.status);
 		}
 	});
 };
