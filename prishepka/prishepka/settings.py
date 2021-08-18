@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'rest_framework_swagger',
     'corsheaders',
     # apps
     'User.apps.UserConfig',
@@ -54,8 +55,6 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
 ]
-
-
 
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_URL_REGEX = r'^/api/.*$'

@@ -1,13 +1,22 @@
 # Модели
+from django.conf.urls import url
 from django.shortcuts import render
 from django.http import HttpResponse
 import json
 
-# for serialize
+# REST FRAMEWORK
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from django.http import JsonResponse
-from .serializers import CommentSerializer
+from rest_framework.views import APIView
+from rest_framework.generics import (
+    ListCreateAPIView,
+    RetrieveUpdateDestroyAPIView
+)
+
+from .serializers import (
+    CommentSerializer,
+    ServiceSerializer
+)
 
 import User.models
 from .models import Service, Comment
@@ -26,6 +35,7 @@ from django.views.generic import (
     CreateView,
     UpdateView,
     DeleteView,
+    TemplateView,
 )
 
 
@@ -196,3 +206,34 @@ def api_comment(request):
         comments = Comment.objects.all()
         serializer = CommentSerializer(comments, many=True)
         return Response(serializer.data)
+
+
+class ServiceApiView(APIView):
+    def get(self, request):
+        services = Service.objects.all()
+        serializer = ServiceSerializer(services, many=True)
+        return Response({'services': serializer.data})
+
+    def post(self, request):
+        # пришли данные из post метода
+        service = request.data.get('service')
+        # сериализуем данные
+        serializer = ServiceSerializer(data=service)
+        # проверим на валидность
+        if serializer.is_valid(raise_exception=True):
+            # если всё ок, сохраняем
+            service_saved = serializer.save()
+            return Response({'success': "Service'{}' created successfully".format(service_saved.title)})
+
+
+class SwaggerDocumentationTemplateView(TemplateView):
+    template_name = 'documentation.html'
+    extra_context = {
+        'schema_url': 'openapi'
+    }
+
+
+class CommentList(ListCreateAPIView):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+
