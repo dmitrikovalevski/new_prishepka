@@ -1,6 +1,7 @@
 # Пути
 from django.urls import path
 
+
 # Представления
 from .views import (
     ServiceListView,
