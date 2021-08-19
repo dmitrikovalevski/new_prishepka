@@ -13,8 +13,10 @@ from .views import (
     ServiceDeleteView,
     SearchView,
     # REST-FRAMEWORK
-    api_comment,
-    ServiceApiView,
+    ServiceList,
+    ServiceListByID,
+    CommentList,
+    CommentListByID,
     SwaggerDocumentationTemplateView,
 )
 
@@ -31,8 +33,11 @@ urlpatterns = [
     path('detail/<int:pk>/delete/', ServiceDeleteView.as_view(), name='delete'),
     path('add_service/', ServiceCreateView.as_view(), name='add_service'),
     path('search_result/', SearchView.as_view(), name='search'),
-    path('api_comment/', api_comment, name='api_comment'),
-    path('api_service/', ServiceApiView.as_view()),
+    # -----------------------------------------------------
+    path('service/', ServiceList.as_view(), name='service'),
+    path('service_id/<int:pk>/', ServiceListByID.as_view(), name='service_id'),
+    path('comment/', CommentList.as_view(), name='comment'),
+    path('comment_id/<int:pk>/', CommentListByID.as_view(), name='comment_id'),
     path('openapi/', schema, name='openapi'),
     path('swagger_docs/', SwaggerDocumentationTemplateView.as_view(), name='swagger_ui')
 ]

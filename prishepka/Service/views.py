@@ -200,30 +200,22 @@ class ServiceDeleteView(DeleteView):
         return reverse('home')
 
 
-@api_view(['GET'])
-def api_comment(request):
-    if request.method == "GET":
-        comments = Comment.objects.all()
-        serializer = CommentSerializer(comments, many=True)
-        return Response(serializer.data)
-
-
-class ServiceApiView(APIView):
-    def get(self, request):
-        services = Service.objects.all()
-        serializer = ServiceSerializer(services, many=True)
-        return Response({'services': serializer.data})
-
-    def post(self, request):
-        # пришли данные из post метода
-        service = request.data.get('service')
-        # сериализуем данные
-        serializer = ServiceSerializer(data=service)
-        # проверим на валидность
-        if serializer.is_valid(raise_exception=True):
-            # если всё ок, сохраняем
-            service_saved = serializer.save()
-            return Response({'success': "Service'{}' created successfully".format(service_saved.title)})
+# class ServiceApiView(APIView):
+#    def get(self, request):
+#        services = Service.objects.all()
+#        serializer = ServiceSerializer(services, many=True)
+#        return Response({'services': serializer.data})
+#
+#    def post(self, request):
+#        пришли данные из post метода
+#        service = request.data.get('service')
+#        # сериализуем данные
+#        serializer = ServiceSerializer(data=service)
+#        # проверим на валидность
+#        if serializer.is_valid(raise_exception=True):
+#            # если всё ок, сохраняем
+#            service_saved = serializer.save()
+#            return Response({'success': "Service'{}' created successfully".format(service_saved.title)})
 
 
 class SwaggerDocumentationTemplateView(TemplateView):
@@ -233,7 +225,21 @@ class SwaggerDocumentationTemplateView(TemplateView):
     }
 
 
+class ServiceList(ListCreateAPIView):
+    queryset = Service.objects.all()
+    serializer_class = ServiceSerializer
+
+
+class ServiceListByID(RetrieveUpdateDestroyAPIView):
+    queryset = Service.objects.all()
+    serializer_class = ServiceSerializer
+
+
 class CommentList(ListCreateAPIView):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
 
+
+class CommentListByID(RetrieveUpdateDestroyAPIView):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
