@@ -35,6 +35,7 @@ function create_comment() {
 	        "<img src='" + check + "' height='25' id='image-comment'>" +
 	        "<a href='/user/account/" + json['user_pk'] + "'>" + json['user'] + "</a>" +
 	        "<p class='mt-2' id='body-comment'>" + json['body'] + "</p>" +
+	        "<p class='d-flex justify-content-end'><button type='submit' id='delete_comment'>удалить</button></p>" +
 	        "<p class='d-flex justify-content-end' id='date-created-comment'>" + json['date_created'] + "</p></div>");
 		},
 

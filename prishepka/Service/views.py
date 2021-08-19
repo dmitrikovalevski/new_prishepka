@@ -5,8 +5,6 @@ from django.http import HttpResponse
 import json
 
 # REST FRAMEWORK
-from rest_framework.response import Response
-from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 from rest_framework.generics import (
     ListCreateAPIView,
@@ -123,8 +121,10 @@ class ServiceDetailView(DetailView, CreateView):
         # Доступ к этим действиям получит только владелец услуги.
         context['owner'] = self.request.user == service_user
 
+        # Переменная данной услуги
         current_service = Service.objects.get(pk=self.kwargs['pk'])
-        # if we have a comment
+
+        # Если есть комментарий
         context['have_comment'] = current_service.comment_set.order_by('-date_created')
 
         return context
@@ -198,24 +198,6 @@ class ServiceDeleteView(DeleteView):
     # После подтверждения удаления вернёт на главную страницу
     def get_success_url(self):
         return reverse('home')
-
-
-# class ServiceApiView(APIView):
-#    def get(self, request):
-#        services = Service.objects.all()
-#        serializer = ServiceSerializer(services, many=True)
-#        return Response({'services': serializer.data})
-#
-#    def post(self, request):
-#        пришли данные из post метода
-#        service = request.data.get('service')
-#        # сериализуем данные
-#        serializer = ServiceSerializer(data=service)
-#        # проверим на валидность
-#        if serializer.is_valid(raise_exception=True):
-#            # если всё ок, сохраняем
-#            service_saved = serializer.save()
-#            return Response({'success': "Service'{}' created successfully".format(service_saved.title)})
 
 
 class SwaggerDocumentationTemplateView(TemplateView):

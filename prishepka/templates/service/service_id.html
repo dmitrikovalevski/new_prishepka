@@ -52,6 +52,9 @@
 
         <a href="{% url 'account' comm.user.pk %}" id="user-link-comment">{{ comm.user }}</a>
         <p class="mt-2" id="body-comment">{{ comm.body }}</p>
+        {% if request.user == comm.user %}
+        <p class="d-flex justify-content-end"><button type="submit" id="delete_comment">удалить</button></p>
+        {% endif %}
         <p class="d-flex justify-content-end" id="date-created-comment">{{ comm.date_created|date:'d.m.Y H:i:s' }}</p>
     </div>
     {% endfor %}
@@ -76,4 +79,6 @@
 {% endif %}
 
 <script src="{% static 'js/dinamic_comment.js' %}"></script>
+<script src="{% static 'js/delete_comment.js' %}"></script>
 {% endblock %}
+
