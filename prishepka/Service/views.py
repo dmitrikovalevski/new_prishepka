@@ -75,10 +75,19 @@ class ServiceDetailView(DetailView, CreateView):
     form_class = CommentForm
 
     def post(self, request, *args, **kwargs):
-        if request.is_ajax():
+
+        # Если отработал ajax и пришел pk, тогда удалить комментарий
+        if request.is_ajax() and request.POST.get('comment_pk'):
+            comment_pk = request.POST.get('comment_pk')
+            comment = Comment.objects.get(pk=comment_pk)
+            comment.delete()
+
+        # Если отработал ajax и пришло не пустое тело комментария тогда сохранить его и отслать на страницу
+        if request.is_ajax() and request.POST.get('the_comment') is not None:
             body = request.POST.get('the_comment')
             data = {}
 
+            # Сохраним новый комменатрий
             comment = Comment(
                 body=body,
                 user=request.user,
@@ -86,7 +95,10 @@ class ServiceDetailView(DetailView, CreateView):
             )
             comment.save()
 
+            # Формируем ответ в виде json
+            data['comment_pk'] = str(comment.pk)
             data['user_pk'] = str(comment.user.pk)
+            data['service_pk'] = str(self.kwargs['pk'])
             data['body'] = comment.body
             data['date_created'] = str(comment.date_created.strftime('%d.%m.%Y %H:%M:%S'))
             data['user'] = str(comment.user)

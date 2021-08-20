@@ -9,9 +9,8 @@ $("#comment-form").on('submit', function(event) {
 
 
 function create_comment() {
-	console.log('comment post is working')
 	let token = document.cookie.split('=')[1];
-	console.log(token)
+
 
 	$.ajax({
 		url: $("#submit-form").attr("data-ajax-target"),
@@ -31,11 +30,11 @@ function create_comment() {
 			};
 
 			$("#id_body").val('');
-			$("#new-block-comment").append("<div class='container bt-3 border' id='block-comment'>" +
+			$("#new-block-comment").append("<div class='container bt-3 border' id='comment_" + json['comment_pk'] + "'>" +
 	        "<img src='" + check + "' height='25' id='image-comment'>" +
 	        "<a href='/user/account/" + json['user_pk'] + "'>" + json['user'] + "</a>" +
 	        "<p class='mt-2' id='body-comment'>" + json['body'] + "</p>" +
-	        "<p class='d-flex justify-content-end'><button type='submit' id='delete_comment'>удалить</button></p>" +
+	        "<p class='d-flex justify-content-end'><button id='button_" + json['comment_pk'] + "' class='btn btn-secondary btn-sm' data-ajax-target='/detail/" + json['service_pk'] + "/' onclick='deleteComment(" + json['comment_pk'] + ")'>удалить</button></p>" +
 	        "<p class='d-flex justify-content-end' id='date-created-comment'>" + json['date_created'] + "</p></div>");
 		},
 
@@ -44,3 +43,12 @@ function create_comment() {
 		}
 	});
 };
+
+
+    // Извлечение части пути из линка, который указывается в строке get браузера
+
+	//let fullLink = window.location.href;
+	//let head = fullLink.split('/').slice(0, 5).join('/');
+	//console.log(head);
+
+
