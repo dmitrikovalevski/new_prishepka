@@ -61,6 +61,11 @@ CORS_URL_REGEX = r'^/api/.*$'
 
 ROOT_URLCONF = 'prishepka.urls'
 
+#REST_FRAMEWORK = {
+#    'DEFAULT_PERMISSION_CLASSES': (
+#        'rest_framework.permissions.AllowAny',
+#)}
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',

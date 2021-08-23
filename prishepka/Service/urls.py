@@ -4,6 +4,15 @@ from django.urls import path
 # REST FRAMEWORK
 from rest_framework.schemas import get_schema_view
 
+from .api import (
+    ServiceList,
+    ServiceListByID,
+    CommentList,
+    CommentListByID,
+    SwaggerDocumentationTemplateView,
+)
+
+
 # Представления
 from .views import (
     ServiceListView,
@@ -12,12 +21,6 @@ from .views import (
     ServiceUpdateView,
     ServiceDeleteView,
     SearchView,
-    # REST-FRAMEWORK
-    ServiceList,
-    ServiceListByID,
-    CommentList,
-    CommentListByID,
-    SwaggerDocumentationTemplateView,
 )
 
 schema = get_schema_view(
@@ -35,9 +38,9 @@ urlpatterns = [
     path('search_result/', SearchView.as_view(), name='search'),
     # -----------------------------------------------------
     path('service/', ServiceList.as_view(), name='service'),
-    path('service_id/<int:pk>/', ServiceListByID.as_view(), name='service_id'),
+    path('service/<int:pk>/', ServiceListByID.as_view(), name='service_id'),
     path('comment/', CommentList.as_view(), name='comment'),
-    path('comment_id/<int:pk>/', CommentListByID.as_view(), name='comment_id'),
+    path('comment/<int:pk>/', CommentListByID.as_view(), name='comment_id'),
     path('openapi/', schema, name='openapi'),
     path('swagger_docs/', SwaggerDocumentationTemplateView.as_view(), name='swagger_ui')
 ]

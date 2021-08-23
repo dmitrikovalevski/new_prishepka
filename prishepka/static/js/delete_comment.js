@@ -2,6 +2,10 @@
 
 // need event 'click'
 
+$("#button_").click(function(event) {
+    event.preventDefault();
+    deleteComment(pk);
+});
 
 function deleteComment(pk) {
     let confirmation = confirm('Вы хотите удалить комментарий?');

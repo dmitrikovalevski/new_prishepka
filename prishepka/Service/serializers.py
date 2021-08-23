@@ -6,6 +6,7 @@ class ServiceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Service
         fields = [
+            'pk',
             'picture',
             'title',
             'descriptions',
@@ -19,6 +20,7 @@ class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
         fields = [
+            'pk',
             'body',
             'date_created',
             'user',

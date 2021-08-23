@@ -34,7 +34,7 @@ function create_comment() {
 	        "<img src='" + check + "' height='25' id='image-comment'>" +
 	        "<a href='/user/account/" + json['user_pk'] + "'>" + json['user'] + "</a>" +
 	        "<p class='mt-2' id='body-comment'>" + json['body'] + "</p>" +
-	        "<p class='d-flex justify-content-end'><button id='button_" + json['comment_pk'] + "' class='btn btn-secondary btn-sm' data-ajax-target='/detail/" + json['service_pk'] + "/' onclick='deleteComment(" + json['comment_pk'] + ")'>удалить</button></p>" +
+	        "<p class='d-flex justify-content-end'><button id='button_' class='btn btn-secondary btn-sm' data-ajax-target='/detail/" + json['service_pk'] + "/' onclick='deleteComment(" + json['comment_pk'] + ")'>удалить</button></p>" +
 	        "<p class='d-flex justify-content-end' id='date-created-comment'>" + json['date_created'] + "</p></div>");
 		},
 
