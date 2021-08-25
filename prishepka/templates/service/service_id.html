@@ -10,13 +10,13 @@
 
     <!-- Если есть картинка, тогда отобразить её -->
       {% if service.picture %}
-      <img src="{{ service.picture.url }}" height="200" class="rounded">
+      <img id="service_image" src="{{ service.picture.url }}" height="200" class="rounded">
       {% endif %}
       <div class="container border px-5">
         <br>
-        <h5 class="mt-0">{{ service.title }}</h5>
-        <p>{{ service.descriptions }}</p>
-        <p>{{ service.price }}</p>
+        <h5 id="service_title" class="mt-0">{{ service.title }}</h5>
+        <p id="service_descriptions">{{ service.descriptions }}</p>
+        <p id="service_price">{{ service.price }}</p>
         <p><a href="{% url 'account' service.user.pk %}">{{ service.user }}</a></p>
           <span class="container d-flex justify-content-end">
               {{ service.date_created|date:'d.m.Y H:i:s'}}
@@ -29,8 +29,8 @@
      тогда отобразить ему кнопки для редактирования и удаления услуги-->
 {% if owner %}
 <div class="container mt-3">
-    <a href="{% url 'update' service.pk %}" class="btn btn-secondary">Редактировать</a>
-    <a href="{% url 'delete' service.pk %}" class="btn btn-secondary">Удалить</a>
+    <a href="{% url 'update' service.pk %}" id="update_service" class="btn btn-secondary">Редактировать</a>
+    <a href="{% url 'delete' service.pk %}" id="delete_service" class="btn btn-secondary">Удалить</a>
 </div>
 {% endif %}
 
@@ -78,6 +78,8 @@
 </div>
 {% endif %}
 
+
+<script src="{% static 'js/dinamic_update_service.js' %}"></script>
 <script src="{% static 'js/dinamic_comment.js' %}"></script>
 <script src="{% static 'js/delete_comment.js' %}"></script>
 {% endblock %}
