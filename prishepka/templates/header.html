@@ -1,5 +1,6 @@
 <!-- Шапка сайта -->
 {% load static %}
+
 <div class="container mt-3">
   <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
 
@@ -17,7 +18,7 @@
     <!-- Если пользователь вошел в систему -->
     {% else %}
       <a href="{% url 'home' %}" class="nav-link px-4 mt-2 link-dark">Прищепка</a>
-      <a href="{% url 'add_service' %}" class="nav-link px-2 ml-7 link-dark"><img src="{% static 'image/plus.png' %}" height="42"></a></a>
+      <a href="{% url 'add_service' %}" data-bs-toggle="modal" data-bs-target="#exampleModal" class="nav-link px-2 ml-7 link-dark"><img src="{% static 'image/plus.png' %}" height="42"></a>
       <form action="{% url 'search' %}" method="GET" class="mt-3 mx-2">
         <input name="user_search" placeholder="Поиск...">
         <button type="submit" class="btn btn-secondary btn-sm">Найти</button>
@@ -48,43 +49,6 @@
          <img src="{{ request.user.userinfo.image.url }}" height="42"></a>
        <a href="{% url 'logout' %}" class="nav-link px-4 link-dark">Выход</a>
     {% endif %}
-  </div>
-</div>
-
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="">ADD SERVICE</button>
-
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Добавить услугу:</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form>
-          <div class="mb-3">
-            <label for="image" class="form-label">Добавте изображение</label>
-            <input class="form-control" type="file" id="image">
-          </div>
-          <div class="mb-3">
-            <label for="title" class="col-form-label">Title:</label>
-            <input type="text" class="form-control" id="title">
-          </div>
-          <div class="mb-3">
-            <label for="description" class="col-form-label">Description:</label>
-            <textarea class="form-control" rows="8" id="description"></textarea>
-          </div>
-          <div class="mb-3">
-            <label for="price" class="col-form-label">Price:</label>
-            <input type="text" class="form-control" id="price">
-          </div>
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Send message</button>
-      </div>
-    </div>
   </div>
 </div>
 

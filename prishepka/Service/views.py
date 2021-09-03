@@ -1,3 +1,5 @@
+from django.core.files.images import ImageFile
+
 # Модели
 from django.conf.urls import url
 from django.shortcuts import render
@@ -8,7 +10,7 @@ import User.models
 from .models import Service, Comment
 
 # Формы
-from .forms import CommentForm
+from .forms import CommentForm, ServiceForm
 
 # Перенаправление
 from django.urls import reverse
@@ -197,5 +199,3 @@ class ServiceDeleteView(DeleteView):
     # После подтверждения удаления вернёт на главную страницу
     def get_success_url(self):
         return reverse('home')
-
-

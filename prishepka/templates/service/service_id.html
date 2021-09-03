@@ -5,8 +5,8 @@
 {% block title %}{{ service.title }}{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
-    <div class="d-flex position-relative mt-3">
+<div class="container mt-4" id="service_content">
+    <div class="d-flex position-relative mt-3" id="service_info">
 
     <!-- Если есть картинка, тогда отобразить её -->
       {% if service.picture %}
@@ -25,18 +25,19 @@
     </div>
 </div>
 
-<!-- Если на страницу услуги зашел владелец этой услуги,
-     тогда отобразить ему кнопки для редактирования и удаления услуги-->
+<!-- Если владелец этой услуги, тогда отобразить ему кнопки -->
 {% if owner %}
-<div class="container mt-3">
-    <a href="{% url 'update' service.pk %}" id="update_service" class="btn btn-secondary">Редактировать</a>
-    <a href="{% url 'delete' service.pk %}" id="delete_service" class="btn btn-secondary">Удалить</a>
+<div class="container mt-3" id="service_buttons">
+    <a href="{% url 'update' service.pk %}" id="update_button" data-ajax-target="{% url 'service_id' service.pk %}" data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-secondary">Редактировать</a>
+    <a href="" id="delete_service" data-ajax-target="{% url 'delete' service.pk %}" onclick="deleteService({{ service.pk }})" class="btn btn-secondary">Удалить</a>
 </div>
 {% endif %}
 
+<!-- data-bs-toggle="modal" data-bs-target="#del_service" data-ajax-target="{% url 'service_id' service.pk %}" -->
+
 <!-- Контейнер отображения комментариев услуги -->
 
-<div class="container mt-3">
+<div class="container mt-3" id="comment_block_view">
 
     <!-- Отображение всех комментариев циклом -->
     {% for comm in service.comment_set.all %}
@@ -65,7 +66,7 @@
 <!-- Если пользователь вошел в всистему он сможет оставить комментарий -->
 {% if perm_for_comment %}
 <!-- Форма для комментария -->
-<div class="container mt-3">
+<div class="container mt-3" id="comment_block">
     <div class="row">
     <div class="col-md-4 mt-2">
     <form method="POST" id="comment-form" enctype="multipart/form-data">
@@ -78,9 +79,48 @@
 </div>
 {% endif %}
 
+<!-- Модальное окно добавления услуги -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content" id="id_modal_content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Добавить услугу:</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form method="POST" enctype="multipart/form-data" name="service_form" id="id_service_form">
+          {% csrf_token %}
+          <div class="mb-3">
+            <label for="picture" class="form-label">Добавте изображение</label>
+            <input class="form-control" type="file" id="picture" name="picture">
+          </div>
+          <div class="mb-3">
+            <label for="title" class="col-form-label">Title:</label>
+            <input type="text" class="form-control" id="title">
+          </div>
+          <div class="mb-3">
+            <label for="description" class="col-form-label">Description:</label>
+            <textarea class="form-control" rows="8" id="description"></textarea>
+          </div>
+          <div class="mb-3">
+            <label for="price" class="col-form-label">Price:</label>
+            <input type="text" class="form-control" id="price">
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+        <button type="button" class="btn btn-primary" data-ajax-target="{% url 'service' %}" id="send_service">Отправить</button>
+      </div>
+    </div>
+  </div>
+</div>
 
-<script src="{% static 'js/dinamic_update_service.js' %}"></script>
-<script src="{% static 'js/dinamic_comment.js' %}"></script>
+
+<script src="{% static 'js/delete_service.js' %}"></script>
+<script src="{% static 'js/create_service.js' %}"></script>
+<script src="{% static 'js/update_service.js' %}"></script>
+<script src="{% static 'js/create_comment.js' %}"></script>
 <script src="{% static 'js/delete_comment.js' %}"></script>
 {% endblock %}
 

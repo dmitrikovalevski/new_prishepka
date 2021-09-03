@@ -1,19 +1,46 @@
 <!-- Шаблон для добавления услуги пользователем -->
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Добавить объявление{% endblock %}
 
 {% block content %}
-<div class="container">
-    <div class="row">
-        <div class="col-md-4 mt-2">
-            <h2>Добавить объявление</h2>
-            <form method="post" enctype="multipart/form-data">
-                {% csrf_token %}
-                {{ form.as_p }}
-                <input class="btn btn-secondary mt-2" type="submit" value="Отправить">
-            </form>
-        </div>
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content" id="id_modal_content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Добавить услугу:</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form method="POST" enctype="multipart/form-data" name="service_form" id="id_service_form">
+          {% csrf_token %}
+          <div class="mb-3">
+            <label for="picture" class="form-label">Добавте изображение</label>
+            <input class="form-control" type="file" id="picture">
+          </div>
+          <div class="mb-3">
+            <label for="title" class="col-form-label">Title:</label>
+            <input type="text" class="form-control" id="title">
+          </div>
+          <div class="mb-3">
+            <label for="description" class="col-form-label">Description:</label>
+            <textarea class="form-control" rows="8" id="description"></textarea>
+          </div>
+          <div class="mb-3">
+            <label for="price" class="col-form-label">Price:</label>
+            <input type="text" class="form-control" id="price">
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+        <button type="button" class="btn btn-primary" data-ajax-target="{% url 'service' %}" id="send_service">Отправить</button>
+      </div>
     </div>
+  </div>
 </div>
+
+<script src="{% static 'js/create_service.js' %}"></script>
+
 {% endblock %}

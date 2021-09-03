@@ -45,10 +45,4 @@ function create_comment() {
 };
 
 
-    // Извлечение части пути из линка, который указывается в строке get браузера
-
-	//let fullLink = window.location.href;
-	//let head = fullLink.split('/').slice(0, 5).join('/');
-	//console.log(head);
-
 
