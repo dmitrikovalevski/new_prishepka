@@ -28,12 +28,11 @@
 <!-- Если владелец этой услуги, тогда отобразить ему кнопки -->
 {% if owner %}
 <div class="container mt-3" id="service_buttons">
-    <a href="{% url 'update' service.pk %}" id="update_button" data-ajax-target="{% url 'service_id' service.pk %}" data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-secondary">Редактировать</a>
+    <a id="update_content" data-ajax-target="{% url 'service_id' service.pk %}" data-bs-toggle="modal" data-bs-target="#contextModal" class="btn btn-secondary">Редактировать текст</a>
+    <a id="update_image" data-ajax-target="{% url 'detail' service.pk %}" data-bs-toggle="modal" data-bs-target="#imageModal" class="btn btn-secondary">Редактировать фото</a>
     <a href="" id="delete_service" data-ajax-target="{% url 'delete' service.pk %}" onclick="deleteService({{ service.pk }})" class="btn btn-secondary">Удалить</a>
 </div>
 {% endif %}
-
-<!-- data-bs-toggle="modal" data-bs-target="#del_service" data-ajax-target="{% url 'service_id' service.pk %}" -->
 
 <!-- Контейнер отображения комментариев услуги -->
 
@@ -80,20 +79,42 @@
 {% endif %}
 
 <!-- Модальное окно добавления услуги -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
-    <div class="modal-content" id="id_modal_content">
+    <div class="modal-content" id="id_imageModal">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Добавить услугу:</h5>
+        <h5 class="modal-title" id="imageModalLabel">Добавить услугу:</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form method="POST" enctype="multipart/form-data" name="service_form" id="id_service_form">
+        <form method="POST" enctype="multipart/form-data" name="service_form" id="id_imageModal_form">
           {% csrf_token %}
           <div class="mb-3">
             <label for="picture" class="form-label">Добавте изображение</label>
             <input class="form-control" type="file" id="picture" name="picture">
           </div>
+        </form>
+      </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+            <button type="button" class="btn btn-primary" data-ajax-target="{% url 'service' %}" id="send_imageModal">Отправить</button>
+          </div>
+    </div>
+  </div>
+</div>
+
+
+
+<div class="modal fade" id="contextModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content" id="id_contextModal">
+      <div class="modal-header">
+        <h5 class="modal-title" id="contextModalLabel">Добавить услугу:</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form method="POST" name="service_form" id="id_contextModal_form">
+          {% csrf_token %}
           <div class="mb-3">
             <label for="title" class="col-form-label">Title:</label>
             <input type="text" class="form-control" id="title">
@@ -110,7 +131,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
-        <button type="button" class="btn btn-primary" data-ajax-target="{% url 'service' %}" id="send_service">Отправить</button>
+        <button type="button" class="btn btn-primary" data-ajax-target="{% url 'update' service.pk %}" id="send_contextModal">Отправить</button>
       </div>
     </div>
   </div>
@@ -119,7 +140,7 @@
 
 <script src="{% static 'js/delete_service.js' %}"></script>
 <script src="{% static 'js/create_service.js' %}"></script>
-<script src="{% static 'js/update_service.js' %}"></script>
+<script src="{% static 'js/update_context.js' %}"></script>
 <script src="{% static 'js/create_comment.js' %}"></script>
 <script src="{% static 'js/delete_comment.js' %}"></script>
 {% endblock %}

@@ -179,6 +179,29 @@ class ServiceUpdateView(UpdateView):
     fields = ['picture', 'title', 'descriptions', 'price']
     template_name = 'service/update_service.html'
 
+    def post(self, request, *args, **kwargs):
+        if request.is_ajax():
+            pk = request.POST.get('pk')
+            title = request.POST.get('title')
+            description = request.POST.get('description')
+            price = request.POST.get('price')
+            print('------', pk)
+            service = Service.objects.get(pk=pk)
+            print(service)
+            print(service.title)
+            print(service.descriptions)
+            print(service.price)
+
+            service.title = title
+            service.descriptions = description
+            service.price = price
+
+            service.save()
+
+            return HttpResponse(json.dumps({'message': 'ok'}), content_type='application/json')
+        else:
+            return HttpResponse(json.dumps({'message': 'error'}), content_type='application/json')
+
     # После подтверждения редактирования вернёт на ранее отредактированную услугу
     def get_success_url(self):
         return reverse('detail', kwargs={'pk': self.object.pk})
