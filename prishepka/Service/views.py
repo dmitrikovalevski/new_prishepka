@@ -10,7 +10,7 @@ import User.models
 from .models import Service, Comment
 
 # Формы
-from .forms import CommentForm, ServiceForm
+from .forms import CommentForm
 
 # Перенаправление
 from django.urls import reverse
@@ -185,20 +185,27 @@ class ServiceUpdateView(UpdateView):
             title = request.POST.get('title')
             description = request.POST.get('description')
             price = request.POST.get('price')
-            print('------', pk)
-            service = Service.objects.get(pk=pk)
-            print(service)
-            print(service.title)
-            print(service.descriptions)
-            print(service.price)
+            picture = request.FILES.get('picture')
+            print(picture)
+            data = {}
 
+            service = Service.objects.get(pk=pk)
+
+            if picture is not None:
+                service.picture = picture
             service.title = title
             service.descriptions = description
             service.price = price
 
             service.save()
 
-            return HttpResponse(json.dumps({'message': 'ok'}), content_type='application/json')
+            data['title'] = service.title
+            data['descriptions'] = service.descriptions
+            data['price'] = service.price
+            if picture is not None:
+                data['picture'] = service.picture.url
+
+            return HttpResponse(json.dumps(data), content_type='application/json')
         else:
             return HttpResponse(json.dumps({'message': 'error'}), content_type='application/json')
 

@@ -11,23 +11,32 @@ function deleteService(pk) {
     if (confirmation) {
         $.ajax({
             url: $("#delete_service").attr('data-ajax-target'),
-            type: 'POST',
-            data: {
-                service_pk: pk,
-                'csrfmiddlewaretoken': csrftoken,
+            type: 'DELETE',
+            headers: {
+                'X-CSRFToken': csrftoken,
             },
-            success: function() {
+            data: {
+                pk: pk,
+            },
+            success: function(data) {
                 $("#service_content").html(
                 "<div>" +
-                "<h1>Услуга удалена</h1>" +
+                "<h1>" + data['message'] + "</h1>" +
                 "<a href='/' class='btn btn-secondary'>На главную</a>" +
                 "</div>");
                 $("#service_buttons").hide();
                 $("#comment_block_view").hide();
                 $("#comment_block").hide();
             },
-            error: function(xhr, errormsg, err) {
-                console.log(xhr, errormsg, err);
+            error: function(data) {
+                $("#service_content").html(
+                "<div>" +
+                "<h1>" + data['message'] + "</h1>" +
+                "<a href='/' class='btn btn-secondary'>На главную</a>" +
+                "</div>");
+                $("#service_buttons").hide();
+                $("#comment_block_view").hide();
+                $("#comment_block").hide();
             },
         });
     };

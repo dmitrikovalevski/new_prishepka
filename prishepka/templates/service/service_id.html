@@ -12,13 +12,13 @@
       {% if service.picture %}
       <img id="service_image" src="{{ service.picture.url }}" height="200" class="rounded">
       {% endif %}
-      <div class="container border px-5">
+      <div class="container border px-5" id="description_block">
         <br>
         <h5 id="service_title" class="mt-0">{{ service.title }}</h5>
         <p id="service_descriptions">{{ service.descriptions }}</p>
         <p id="service_price">{{ service.price }}</p>
         <p><a href="{% url 'account' service.user.pk %}">{{ service.user }}</a></p>
-          <span class="container d-flex justify-content-end">
+          <span id="service_date_created" class="container d-flex justify-content-end">
               {{ service.date_created|date:'d.m.Y H:i:s'}}
           </span>
       </div>
@@ -28,9 +28,8 @@
 <!-- Если владелец этой услуги, тогда отобразить ему кнопки -->
 {% if owner %}
 <div class="container mt-3" id="service_buttons">
-    <a id="update_content" data-ajax-target="{% url 'service_id' service.pk %}" data-bs-toggle="modal" data-bs-target="#contextModal" class="btn btn-secondary">Редактировать текст</a>
-    <a id="update_image" data-ajax-target="{% url 'detail' service.pk %}" data-bs-toggle="modal" data-bs-target="#imageModal" class="btn btn-secondary">Редактировать фото</a>
-    <a href="" id="delete_service" data-ajax-target="{% url 'delete' service.pk %}" onclick="deleteService({{ service.pk }})" class="btn btn-secondary">Удалить</a>
+    <a id="update_content" data-ajax-target="{% url 'service_id' service.pk %}" data-bs-toggle="modal" data-bs-target="#update_modal" class="btn btn-secondary">Редактировать</a>
+    <a href="" id="delete_service" data-ajax-target="{% url 'service_id' service.pk %}" onclick="deleteService({{ service.pk }})" class="btn btn-secondary">Удалить</a>
 </div>
 {% endif %}
 
@@ -53,7 +52,7 @@
         <a href="{% url 'account' comm.user.pk %}" id="user-link-comment">{{ comm.user }}</a>
         <p class="mt-2" id="body-comment">{{ comm.body }}</p>
         {% if request.user == comm.user %}
-        <p class="d-flex justify-content-end"><button id="button_{{ comm.pk }}" class="btn btn-secondary btn-sm" data-ajax-target="{% url 'detail' service.pk %}" onclick="deleteComment({{ comm.pk }})">удалить</button></p>
+        <p class="d-flex justify-content-end"><button id="button_{{ comm.pk }}" class="btn btn-secondary btn-sm" data-ajax-target="{% url 'comment_id' comm.pk %}" onclick="deleteComment({{ comm.pk }})">удалить</button></p>
         {% endif %}
         <p class="d-flex justify-content-end" id="date-created-comment">{{ comm.date_created|date:'d.m.Y H:i:s' }}</p>
     </div>
@@ -71,41 +70,15 @@
     <form method="POST" id="comment-form" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form.as_p }}
-        <input id="submit-form" type="submit" class="btn btn-secondary" data-ajax-target="{% url 'detail' service.pk %}" value="Добавить комментарий">
+        <input id="submit-form" type="submit" class="btn btn-secondary" data-ajax-target="{% url 'comment' %}" value="Добавить комментарий">
     </form>
     </div>
     </div>
 </div>
 {% endif %}
 
-<!-- Модальное окно добавления услуги -->
-<div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content" id="id_imageModal">
-      <div class="modal-header">
-        <h5 class="modal-title" id="imageModalLabel">Добавить услугу:</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form method="POST" enctype="multipart/form-data" name="service_form" id="id_imageModal_form">
-          {% csrf_token %}
-          <div class="mb-3">
-            <label for="picture" class="form-label">Добавте изображение</label>
-            <input class="form-control" type="file" id="picture" name="picture">
-          </div>
-        </form>
-      </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
-            <button type="button" class="btn btn-primary" data-ajax-target="{% url 'service' %}" id="send_imageModal">Отправить</button>
-          </div>
-    </div>
-  </div>
-</div>
-
-
-
-<div class="modal fade" id="contextModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<!-- Модальное окно редактирования услуги -->
+<div class="modal fade" id="update_modal" tabindex="-1" aria-labelledby="contextModal" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content" id="id_contextModal">
       <div class="modal-header">
@@ -113,8 +86,50 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form method="POST" name="service_form" id="id_contextModal_form">
+        <form method="POST" name="update_service_form" id="id_contextModal_form">
           {% csrf_token %}
+          <div class="mb-3">
+            <label for="picture" class="form-label">Добавте изображение</label>
+            <input class="form-control" type="file" id="update_picture" name="picture">
+          </div>
+          <div class="mb-3">
+            <label for="title" class="col-form-label">Title:</label>
+            <input type="text" class="form-control" id="update_title">
+          </div>
+          <div class="mb-3">
+            <label for="description" class="col-form-label">Description:</label>
+            <textarea class="form-control" rows="8" id="update_descriptions"></textarea>
+          </div>
+          <div class="mb-3">
+            <label for="price" class="col-form-label">Price:</label>
+            <input type="text" class="form-control" id="update_price">
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" data-ajax-target="{% url 'service_id' service.pk %}" id="send_contextModal">Отправить</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Модальное окно добавления услуги -->
+<div class="modal fade" id="create_service" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content" id="id_modal_content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Добавить услугу:</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form method="POST" enctype="multipart/form-data" name="service_form" id="id_service_form">
+          {% csrf_token %}
+          <div class="mb-3">
+            <label for="picture" class="form-label">Добавте изображение</label>
+            <input class="form-control" type="file" id="picture" name="picture">
+          </div>
           <div class="mb-3">
             <label for="title" class="col-form-label">Title:</label>
             <input type="text" class="form-control" id="title">
@@ -131,16 +146,15 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
-        <button type="button" class="btn btn-primary" data-ajax-target="{% url 'update' service.pk %}" id="send_contextModal">Отправить</button>
+        <button type="button" class="btn btn-primary" data-ajax-target="{% url 'service' %}" id="send_service">Отправить</button>
       </div>
     </div>
   </div>
 </div>
 
-
 <script src="{% static 'js/delete_service.js' %}"></script>
 <script src="{% static 'js/create_service.js' %}"></script>
-<script src="{% static 'js/update_context.js' %}"></script>
+<script src="{% static 'js/update_service.js' %}"></script>
 <script src="{% static 'js/create_comment.js' %}"></script>
 <script src="{% static 'js/delete_comment.js' %}"></script>
 {% endblock %}
